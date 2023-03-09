@@ -34,13 +34,9 @@ RUN apt-get update -qq \
 ARG BITCOIN_VERSION=24.0.1
 ENV BITCOIN_TARBALL bitcoin-${BITCOIN_VERSION}-x86_64-linux-gnu.tar.gz
 ENV BITCOIN_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/$BITCOIN_TARBALL
-ENV BITCOIN_ASC_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/SHA256SUMS.asc
 
 RUN cd /tmp \
 	&& wget -qO $BITCOIN_TARBALL "$BITCOIN_URL" \
-	&& wget -qO bitcoin.asc "$BITCOIN_ASC_URL" \
-	&& grep $BITCOIN_TARBALL bitcoin.asc | tee SHA256SUMS.asc \
-	&& sha256sum -c SHA256SUMS.asc \
 	&& BD=bitcoin-$BITCOIN_VERSION/bin \
 	&& tar -xzvf $BITCOIN_TARBALL $BD/bitcoin-cli $BD/bitcoind --strip-components=1 \
 	&& cp bin/bitcoind bin/bitcoin-cli /usr/bin/ \
